@@ -478,4 +478,4 @@ sqlite>
 
 # Disclaimer
 
-This piece of software works as it is. Although its far behind from being only  proof of concept, you could still use it in your company. Since I've code it in my free time any credits, "I LIKE"s whatever would be appreciated. If you have any suggestions about new modules, better core design or simply want to say "Hello", don't hesitate to contact me.Motivation
+This piece of software works as it is. Although its far behind from being only  proof of concept, you could still use it in your company. Since I've code it in my free time any credits, "I LIKE"s whatever would be appreciated. If you have any suggestions about new modules, better core design or simply want to say "Hello", don't hesitate to contact me.
