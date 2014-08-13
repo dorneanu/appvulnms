@@ -1,14 +1,10 @@
 # Introduction
 
--------
-
 This bundle of python scripts is aimed at everyone in the IT security industry who has to inspect, manage and track application vulnerabilities and create nice looking reports. At the moment there is de facto no standard format/layout to describe application vulnerabilities. In the past history there were several suggestions but none of them was established as a standard.
 
 Besides that every (web) application scanner uses its own reporting format so you can't really compare results from different vendors.  This is here the idea for this whole project came of: The ability to compare different scanning results for better vulnerability scan coverage.
 
 # Technology
-
-----
 
 I mainly use Python to to the most important jobs because of its simplicity and OS independence. Among Python 3.x I make heavy use of:
 
@@ -23,8 +19,6 @@ I mainly use Python to to the most important jobs because of its simplicity and 
 
 
 # The AppVuln* suite
-
-----
 
 The vulnerability management system (VMS) consists of 3 main components
 
@@ -54,17 +48,16 @@ The XML describes a way how to handle and store application vulnerability data. 
 
 ### Scanner information
 
-~~~~~
+```xml
 <Scanner>
         <Name>Favourite scanning tool</Name>
         <Version>x.y.z</Version>
 </Scanner>
-~~~~~
+```
 
 ### Summary
 
-~~~~~
-
+```xml
 <Summary>
     <TotalIssues>41</TotalIssues>
     <ScanDuration/>
@@ -79,13 +72,12 @@ The XML describes a way how to handle and store application vulnerability data. 
       </Host>
     </Targets>
   </Summary>
+```
 
-~~~~~
 
 ### Results
 
-~~~~~
-
+```xml
  <Results>
     <Vulnerabilities>
       <Vuln type="authBypassSQLInjection" error_type="">
@@ -138,8 +130,7 @@ The XML describes a way how to handle and store application vulnerability data. 
       ....
    </Vulnerabilities>
 </Results>
-
-~~~~~
+```
 
 ## AppVulnDB
 
@@ -243,13 +234,13 @@ Having those vulnerability details one could easily generate fancy pie charts or
 
 The management system itself tries to act as a connecting glue between the scan results, the AppVulnXML files and the AppVulnDB. You could think of some modular framework - although it's not - easy to extend with your new modules. I tried to simplify the basic structure of a single module and give the user the ability to run every module from the command line. Every module should at least have some *--help* option:
 
-~~~~~
+```shell
 
 $ python3 bin/AppVulnMS-cli.py m <here comes the module name> --help
 
 ....
 
-~~~~
+```
 
 Each module should have a *parent category* like *convert*, *appvulndb*, *report* and so on: Just have a look inside the *modules* directory.
 
@@ -272,7 +263,6 @@ Currently there are following categories and modules available:
 
 
 # Usage
-----
 
 Feel free to clone this repository. In order to get this work make sure you have following packages installed:
 
@@ -288,7 +278,7 @@ Feel free to clone this repository. In order to get this work make sure you have
 
 The basic run would be:
 
-~~~~~
+```shell
 
 $ python3 bin/AppVulnMS-cli.py -h
 
@@ -311,13 +301,13 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
 
-~~~~~
+```
 
 As you can at the moment there is only one mode to run *AppVulnMS* with. In the near future an additional mode "db" should be added which is supposed to handle all the DB actions. Right now the DB activities are bundled into one single module.
 
 Now let's have a look at the additional parameters for the (m)odule mode:
 
-~~~~~
+```shell
 
 $ python3 bin/AppVulnMS-cli.py m -h
 
@@ -348,13 +338,13 @@ optional arguments:
   -v, --verbose       Add verbosity
   -l, --list-modules  List available modules
 
-~~~~~
+```
 
 
 Let's have a look at the available modules:
 
 
-~~~~~
+```shell
 
 $ python3 bin/AppVulnMS-cli.py m -l
 
@@ -385,17 +375,17 @@ $ python3 bin/AppVulnMS-cli.py m -l
     _ Version    v0.1
     _ URL:       http://www-03.ibm.com/software/products/us/en/appscan/
 
-~~~~~
+```
 
 ## Convert scanning results
 
 In order to convert scanning results you'll have to export them first and then run AppVulnMS. For Acunetix scanning results that'd be:
 
-~~~~~
+```shell
 
 $ python3 bin/AppVulnMS-cli.py m converter/xml/acunetix -i Acunetix-Export.xml -x data/modules/converter/acunetix/transformation.xslt -o Acunetix-Export-Converted.xml
 
-~~~~
+```
 
 
 Explanations:
@@ -415,7 +405,7 @@ Explanations:
 Let's have a look at the implemented module and its options:
 
 
-~~~~~
+```shell
 $ python3 bin/AppVulnMS-cli.py m vms/appvulndb/sqlite --help
 
 ...
@@ -429,41 +419,36 @@ positional arguments:
 
 optional arguments:
   -h, --help     show this help message and exit
-~~~~~
+```
 
 So first of all we'll have to init/create a DB file:
 
 
-~~~~~
-
+```shell
 $  python3 bin/AppVulnMS-cli.py m vms/appvulndb/sqlite init -f appvulndb.sqlite
 
 ...
 
 [INFO]  Succesfully created DB
-
-~~~~~
+```
 
 
 And now we could easily import the previous generated AppVulnXML file into the DB:
 
 
-~~~~~
-
+```shell
 $ python3 bin/AppVulnMS-cli.py m vms/appvulndb/sqlite import -d appvulndb.sqlite -f tmp/acunetix.xml
 
 ...
 
 [INFO]  Successfully imported data into DB
-
-~~~~~
+```
 
 
 Now you can verify the results using some SQLite client:
 
 
-~~~~~
-
+```shell
 $ echo "SELECT COUNT(*) FROM vulnerability;SELECT * FROM scanner;" | sqlite3 -interactive appvulndb.sqlite
 SQLite version 3.8.2 2013-12-06 23:53:30
 Enter ".help" for instructions
@@ -472,8 +457,7 @@ sqlite> SELECT COUNT(*) FROM vulnerability;SELECT * FROM scanner;
 179
 1|Acunetix Web Vulnerability Scanner|9|
 sqlite>
-
-~~~~~
+```
 
 
 # Disclaimer
