@@ -1,0 +1,48 @@
+CREATE TABLE vulnerability (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "type" TEXT,
+    "name" TEXT,
+    "severity" TEXT,
+    "description" TEXT,
+    "scan_id" INTEGER,
+    "date_added" TEXT,
+    "error_type" TEXT,
+    "poc_type_id" INTEGER,
+    "poc_id" INTEGER,
+    "comments" TEXT
+);
+CREATE TABLE "scanner" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "name" TEXT, "version" TEXT, "description" TEXT);
+;
+CREATE TABLE "scan" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "scope" TEXT, "target" TEXT, "date_started" TEXT, "date_finished" TEXT, "scanner_id" INTEGER, "count_total_vulns" INTEGER, "count_new_vulns" INTEGER, "count_old_vulns" INTEGER, "count_fixed_vulns" INTEGER);
+;
+CREATE TABLE "poc_type_http" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "vulnerability_id" INTEGER NOT NULL,
+    "URL" TEXT,
+    "method" TEXT,
+    "request_header" TEXT,
+    "request_cookie" TEXT,
+    "request_data" TEXT,
+    "response_header" TEXT,
+    "response_cookie" TEXT,
+    "response_data" TEXT,
+    "input_type" TEXT,
+    "input_name" TEXT,
+    "input_payload" TEXT,
+    "scanner" TEXT
+);
+CREATE TABLE "poc_type" (
+    "id" INTEGER PRIMARY KEY NOT NULL,
+    "name" TEXT,
+    "poc_table_name" TEXT NOT NULL
+);
+CREATE TABLE "reference" (
+    "id" INTEGER PRIMARY KEY,
+    "reference_type" TEXT,
+    "name" TEXT,
+    "ref_id" INTEGER,
+    "URL" TEXT
+);
+
+-- Init some tables
+INSERT INTO poc_type (name, poc_table_name) VALUES ("http", "poc_type_http")

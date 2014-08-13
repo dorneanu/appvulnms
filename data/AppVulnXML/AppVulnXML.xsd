@@ -1,0 +1,240 @@
+<!--
+    This file is part of the AppVulnMS project.
+
+
+    Copyright (c) 2014 Victor Dorneanu <info AAET dornea DOT nu>
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+    The MIT License (MIT)
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="XmlReport">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Scanner"/>
+                <xs:element ref="Summary"/>
+                <xs:element ref="Results"/>
+            </xs:sequence>
+            <xs:attribute name="version" use="required" type="xs:decimal"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Scanner">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Name"/>
+                <xs:element ref="Version"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Name" type="xs:string"/>
+    <xs:element name="Version" type="xs:NMTOKEN"/>
+    <xs:element name="Summary">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="TotalIssues"/>
+                <xs:element ref="ScanDuration"/>
+                <xs:element ref="Target"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="TotalIssues" type="xs:integer"/>
+    <xs:element name="ScanDuration" type="xs:string"/>
+    <xs:element name="Results">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Vulnerabilities"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Vulnerabilities">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="Vuln" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Vuln">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Description"/>
+                <xs:element ref="Comments"/>
+                <xs:element ref="Target"/>
+                <xs:element ref="Severity"/>
+                <xs:element ref="RawTraffic"/>
+                <xs:element ref="TestProbe" maxOccurs="unbounded"/>
+                <xs:element ref="References" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="error_type" use="required"/>
+            <xs:attribute name="type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Description">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="html" type="xs:string"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Comments" type="xs:string"/>
+    <xs:element name="Severity" type="xs:string"/>
+    <xs:element name="RawTraffic">
+        <xs:complexType>
+            <xs:all>
+                <xs:element ref="MergedTraffic" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="RequestTraffic" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="ResponseTraffic" minOccurs="0" maxOccurs="1"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="MergedTraffic" type="xs:anyType"> </xs:element>
+    <xs:element name="RequestTraffic" type="xs:anyType"> </xs:element>
+    <xs:element name="ResponseTraffic" type="xs:anyType"> </xs:element>
+    <xs:element name="TestProbe">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="HTTP" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="HTTP">
+        <xs:complexType>
+            <xs:all>
+                <xs:element ref="Request"/>
+                <xs:element ref="Response"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Request">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="URL"/>
+                <xs:element ref="Parsed" minOccurs="0"/>
+                <xs:element ref="Payload" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="method" use="optional" type="xs:string"/>
+            <xs:attribute name="version" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="URL" type="xs:string"/>
+    <xs:element name="Payload">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Input" minOccurs="0"/>
+                <xs:element ref="Raw" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Input">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="type" type="xs:string"/>
+                    <xs:attribute name="name" type="xs:string"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Raw" type="xs:string"/>
+    <xs:element name="Response">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Parsed" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="reason" type="xs:string" use="optional"/>
+            <xs:attribute name="status" type="xs:integer" use="optional"/>
+            <xs:attribute name="version" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="References">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Ref" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Ref">
+        <xs:complexType>
+            <xs:attribute name="type" use="optional" type="xs:string"/>
+            <xs:attribute name="id" use="optional" type="xs:string"/>
+            <xs:attribute name="URL" use="optional" type="xs:anyURI"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Target">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="Host"/>
+            </xs:sequence>
+            <xs:attribute name="host" type="xs:anyURI"/>
+            <xs:attribute name="port" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Host">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="Issues"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:anyURI"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Issues">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="High"/>
+                <xs:element ref="Medium"/>
+                <xs:element ref="Low"/>
+                <xs:element ref="Informational"/>
+            </xs:sequence>
+            <xs:attribute name="total" use="required" type="xs:integer"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="High" type="xs:integer"/>
+    <xs:element name="Medium" type="xs:integer"/>
+    <xs:element name="Low" type="xs:integer"/>
+    <xs:element name="Informational" type="xs:integer"/>
+    <xs:element name="Parsed">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Header" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="name" type="xs:NCName" use="required"/>
+                                <xs:attribute name="value" type="xs:string" use="required"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Data" minOccurs="0">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute name="base64" type="xs:string"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

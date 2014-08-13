@@ -1,0 +1,11 @@
+local
+__pycache__/
+*.py[cod]
+*.sw[po]
+*.sublime-*
+local/
+tmp/
+env/bin
+env/lib
+env/include
+
